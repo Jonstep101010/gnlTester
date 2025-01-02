@@ -7,12 +7,7 @@ SHELL					= bash
 
 
 MANDATORY_HEADER		= ../get_next_line.h
-MANDATORY_FILES			= ../get_next_line.c ../get_next_line_utils.c
-MANDATORY_OBJS			= $(MANDATORY_FILES:../%.c=%.o)
-
-BONUS_HEADER			= ../get_next_line_bonus.h
-BONUS_FILES				= ../get_next_line_bonus.c ../get_next_line_utils_bonus.c
-BONUS_OBJS				= $(BONUS_FILES:../%.c=%.o)
+TEST_TARGETS_DIR 		= ../test_targets
 
 MANDATORY				= mandatory
 1MANDATORY				= $(addprefix 1, $(MANDATORY))
@@ -38,53 +33,49 @@ ifeq ($(UNAME), Linux)
 endif
 
 $(1MANDATORY): 1%:
-	@gcc -D BUFFER_SIZE=1 $(CFLAGS) -c $(MANDATORY_FILES)
-	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(MANDATORY_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(TEST_TARGETS_DIR)/libget_next_line_1.a -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
 $(42MANDATORY): 42%:
-	@gcc -D BUFFER_SIZE=42 $(CFLAGS) -c $(MANDATORY_FILES)
-	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(MANDATORY_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(TEST_TARGETS_DIR)/libget_next_line_42.a -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
 $(10MMANDATORY): 10M%:
-	@gcc -D BUFFER_SIZE=10000000 $(CFLAGS) -c $(MANDATORY_FILES)
-	@clang++ -D BUFFER_SIZE=10000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(MANDATORY_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+	@clang++ -D BUFFER_SIZE=1000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(TEST_TARGETS_DIR)/libget_next_line_1000000.a -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
 
+# $(1BONUS): 1%:
+# 	@gcc -D BUFFER_SIZE=1 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+# $(42BONUS): 42%:
+# 	@gcc -D BUFFER_SIZE=42 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+# $(10MBONUS): 10M%:
+# 	@gcc -D BUFFER_SIZE=10000000 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=10000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
 
-$(1BONUS): 1%:
-	@gcc -D BUFFER_SIZE=1 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
-$(42BONUS): 42%:
-	@gcc -D BUFFER_SIZE=42 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
-$(10MBONUS): 10M%:
-	@gcc -D BUFFER_SIZE=10000000 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=10000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$*.cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
-
-$(1MBONUS): m1%:
-	@gcc -D BUFFER_SIZE=1 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
-$(42MBONUS): m42%:
-	@gcc -D BUFFER_SIZE=42 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
-$(10MMBONUS): m10M%:
-	@gcc -D BUFFER_SIZE=10000000 $(CFLAGS) -c $(BONUS_FILES)
-	@clang++ -D BUFFER_SIZE=10000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+# $(1MBONUS): m1%:
+# 	@gcc -D BUFFER_SIZE=1 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=1 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+# $(42MBONUS): m42%:
+# 	@gcc -D BUFFER_SIZE=42 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=42 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
+# $(10MMBONUS): m10M%:
+# 	@gcc -D BUFFER_SIZE=10000000 $(CFLAGS) -c $(BONUS_FILES)
+# 	@clang++ -D BUFFER_SIZE=10000000 -gdwarf-4 -D TIMEOUT_US=$(TIMEOUT_US) $(CPPFLAGS) $(UTILS) $(TESTS_PATH)$(MANDATORY).cpp $(BONUS_OBJS) -o gnlTest && $(VALGRIND) ./gnlTest < files/alternate_line_nl_with_nl && rm -f gnlTest
 
 mandatory_start:
 	@tput setaf 4 && echo [Mandatory]
 
-bonus_start:
-	@tput setaf 3 && printf "[Static = " && cat ../*bonus.c | grep -E 'static.*;' | wc -l | tr -d '\n' | xargs /bin/echo -n && printf "]\n"
-	@tput setaf 5 && /bin/echo [Bonus]
+# bonus_start:
+# 	@tput setaf 3 && printf "[Static = " && cat ../*bonus.c | grep -E 'static.*;' | wc -l | tr -d '\n' | xargs /bin/echo -n && printf "]\n"
+# 	@tput setaf 5 && /bin/echo [Bonus]
 
-dockerm dockerb dockera: docker%:
-	@docker rm -f mc > /dev/null 2>&1 || true
-	docker build -qt mi .
-	docker run -dti --name mc -v $(shell dirname $(shell pwd)):/project/ mi
-	docker exec -ti mc make $* -C gnlTester || true
-	@docker rm -f mc > /dev/null 2>&1
+# dockerm dockerb dockera: docker%:
+# 	@docker rm -f mc > /dev/null 2>&1 || true
+# 	docker build -qt mi .
+# 	docker run -dti --name mc -v $(shell dirname $(shell pwd)):/project/ mi
+# 	docker exec -ti mc make $* -C gnlTester || true
+# 	@docker rm -f mc > /dev/null 2>&1
 
 m: mandatory_start $(1MANDATORY) $(42MANDATORY) $(10MMANDATORY) cleanMandatory
-b: bonus_start $(1MBONUS) $(42MBONUS) $(10MMBONUS) $(1BONUS) $(42BONUS) $(10MBONUS) cleanBonus
-a: m b
+# b: bonus_start $(1MBONUS) $(42MBONUS) $(10MMBONUS) $(1BONUS) $(42BONUS) $(10MBONUS) cleanBonus
+# a: m b
 
 fclean clean cleanMandatory cleanBonus:
 	@rm -rf $(MANDATORY_OBJS) $(BONUS_OBJS) gnlTest*
